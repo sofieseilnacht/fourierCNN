@@ -119,7 +119,7 @@ for i, cat_gal in enumerate(cat):
     bounds = stamp.bounds & full_image.bounds
     full_image[bounds] += stamp[bounds]
 
-    # full_image.addNoise(cn)
+    full_image.addNoise(cn)
 
     # write out this image
     if config.get("pipeline", "output_type") == 'txt':
