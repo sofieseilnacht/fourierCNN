@@ -1,0 +1,20 @@
+name: galsim-rwl
+channels:
+  - conda-forge
+  - nodefaults
+dependencies:
+  - python
+  - pip>=9.0
+  - compilers
+  - setuptools>=38
+  - numpy>=1.17
+  - matplotlib
+  - astropy>=2.0
+  - pybind11>=2.2
+  - fftw>=3.3
+  - eigen>=3.3
+  - LSSTDESC.Coord>=1.2
+  - pyyaml>=3.12
+  - pandas>=0.20
+  - ipython
+  - galsim
