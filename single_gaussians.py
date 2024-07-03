@@ -29,9 +29,10 @@ image_size = int((fov / galsim.arcmin) / (pixel_scale / galsim.arcmin))
 psf_image = galsim.fits.read(config.get("skymodel", "psf_filepath"))
 psf = galsim.InterpolatedImage(psf_image, flux=1, scale=pixel_scale / galsim.arcsec)
 
-# load and cut the catalogue
+# load the catalogue
 cat = load_catalogue(config)
 
+# cut the catalogue to the number of sources we want
 nobj = len(cat)
 if config.getint("skymodel", "ngals") > -1:
     nobj = config.getint("skymodel", "ngals")
@@ -123,7 +124,7 @@ for i, cat_gal in enumerate(cat):
 
     # write out this image
     if config.get("pipeline", "output_type") == 'txt':
-        np.savetxt(os.path.join(output_path, f"image_{i}.txt"), full_image.array)
+        np.savetxt(os.path.join(output_path, f"image_{config.get("pipeline", "output_suffix")}_{i}.txt"), full_image.array)
 
     if config.getboolean("pipeline", "do_thumbnails"):
         plt.figure()
