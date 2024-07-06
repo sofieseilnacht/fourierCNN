@@ -20,7 +20,7 @@ config.read('./inis/test.ini')
 
 output_path = config.get("pipeline", "output_path")
 figure_path = config.get("pipeline", "figure_path")
-
+constant_mod_e = config.get("skymodel", "constant_mod_e")
 # Set some image properties
 pixel_scale = config.getfloat("skymodel", "pixel_scale") * galsim.arcsec
 fov = config.getfloat("skymodel", "field_of_view") * galsim.arcmin
@@ -40,7 +40,7 @@ if config.getint("skymodel", "ngals") > -1:
 
 # write out catalogue
 output_filename = (
-    "truthcat" + "_" + config.get("pipeline", "output_suffix") + ".fits"
+    "truthcat" + "_" + config.get("skymodel", "constant_mod_e") + "ellipticity" + ".fits"
 )
 
 print("Writing truthcat to " + os.path.join(output_path, output_filename))
@@ -124,11 +124,37 @@ for i, cat_gal in enumerate(cat):
 
     # write out this image
     if config.get("pipeline", "output_type") == 'txt':
-        np.savetxt(os.path.join(output_path, f"image_{config.get("pipeline", "output_suffix")}_{i}.txt"), full_image.array)
-
+        while True:
+    # Construct the filename with the current index
+            filename = f"{constant_mod_e}ellipticity_{i}.txt"
+            filepath = os.path.join(output_path, filename)
+            
+            # Check if the file already exists
+            if not os.path.exists(filepath):
+                # If file doesn't exist, save the data
+                np.savetxt(filepath, full_image.array)
+                
+                break  # Exit the loop once saved
+            else:
+                # Increment index and try the next filename
+                i += 1
+                    
     if config.getboolean("pipeline", "do_thumbnails"):
-        plt.figure()
-        plt.title(f'Source {i}')
-        plt.imshow(full_image.array, origin="lower")#, norm=colors.LogNorm())
-        plt.savefig(os.path.join(figure_path, f"image_{i}.png"), bbox_inches="tight", dpi=300)
-
+        while True:
+            # Construct the filename with the current index
+            filename = f"{constant_mod_e}ellipticity_{i}.png"
+            filepath = os.path.join(figure_path, filename)
+            
+            # Check if the file already exists
+            if not os.path.exists(filepath):
+                # If file doesn't exist, save the plot
+                plt.figure()
+                plt.title(f'Source {i}')
+                plt.imshow(full_image.array, origin="lower")
+                plt.savefig(filepath, bbox_inches="tight", dpi=300)
+                plt.close()  # Close the current plot to release memory
+                
+                break  # Exit the loop once saved
+            else:
+                # Increment index and try the next filename
+                i += 1
